@@ -10,10 +10,10 @@ pipeline {
 
         stage('Build') {
             steps {
-                script {
-                    def gradleHome = tool name: 'Gradle', type: 'Tool'
-                    bat "${gradleHome}/bin/gradle assembleRelease"
-                }
+                bat './gradlew assembleRelease'
+
+                // Archive the APKs so that they can be downloaded from Jenkins
+                archiveArtifacts '**/*.apk'
             }
         }
 
