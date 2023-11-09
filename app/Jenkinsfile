@@ -20,8 +20,7 @@ pipeline {
         stage('Upload to App Center') {
             steps {
                 script {
-                    appcenter(
-                        apiToken: 'b9516eda8e2b5e46b98bf189a889a4e611e62c10',
+                    appcenter apiToken: 'b9516eda8e2b5e46b98bf189a889a4e611e62c10',
                         ownerName: 'ganpatmalekar',
                         appName: 'TestFlavor',
 //                         artifacts: [
@@ -34,7 +33,6 @@ pipeline {
 //                         ]
                         pathToApp: 'app/build/outputs/apk/release/release-unsigned.apk',
                         distributionGroups:'TestersGroup'
-                    )
                 }
             }
         }
