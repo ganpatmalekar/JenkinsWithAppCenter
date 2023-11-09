@@ -1,52 +1,5 @@
-// pipeline {
-//     agent any
-//
-//     stages {
-//         stage('Checkout') {
-//             steps {
-//                 checkout scm
-//             }
-//         }
-//
-//         stage('Build') {
-//             steps {
-//                 bat './gradlew assembleRelease'
-//
-//                 // Archive the APKs so that they can be downloaded from Jenkins
-//                 archiveArtifacts '**/*.apk'
-//             }
-//         }
-//
-//         stage('Upload to App Center') {
-//             steps {
-//                 script {
-//                     appcenter(
-//                         apiToken: 'b9516eda8e2b5e46b98bf189a889a4e611e62c10',
-//                         ownerName: 'ganpatmalekar'
-//                         appName: 'TestFlavor',
-//                         artifacts: [
-//                             [
-//                                 upload: 'app/build/outputs/apk/release/app-release-unsigned.apk',
-//                                 target: 'groups',
-//                                 destinationType: 'group',
-//                                 groupName: 'Testing Group'
-//                             ]
-//                         ]
-//                     )
-//                 }
-//             }
-//         }
-//     }
-// }
 pipeline {
     agent any
-
-    environment {
-        APP_CENTER_API_TOKEN = credentials('b9516eda8e2b5e46b98bf189a889a4e611e62c10') // Define a Jenkins credential for your App Center API token
-        APP_NAME = 'TestFlavor'
-        BUILD_DIR = 'app/build/outputs/apk/release/app-release-unsigned.apk' // Path to your APK file
-        DISTRIBUTION_GROUP = 'TestersGroup' // Replace with your distribution group
-    }
 
     stages {
         stage('Checkout') {
@@ -55,62 +8,109 @@ pipeline {
             }
         }
 
-        stage('Build APK') {
+        stage('Build') {
             steps {
-                sh './gradlew assembleRelease'
+                bat './gradlew assembleRelease'
+
+                // Archive the APKs so that they can be downloaded from Jenkins
+                archiveArtifacts '**/*.apk'
             }
         }
 
-        stage('Publish to App Center') {
+        stage('Upload to App Center') {
             steps {
                 script {
-                    def appCenterApiUrl = 'https://api.appcenter.ms/v0.1/apps'
-                    def uploadApiUrl = "${appCenterApiUrl}/${APP_NAME}/release_uploads"
-
-                    def response = httpRequest(
-                        acceptType: 'APPLICATION_JSON',
-                        contentType: 'APPLICATION_JSON',
-                        httpMode: 'POST',
-                        url: uploadApiUrl,
-                        customHeaders: [[name: 'X-API-Token', value: env.APP_CENTER_API_TOKEN]]
+                    appcenter(
+                        apiToken: 'b9516eda8e2b5e46b98bf189a889a4e611e62c10',
+                        ownerName: 'ganpatmalekar'
+                        appName: 'TestFlavor',
+                        artifacts: [
+                            [
+                                upload: 'app/build/outputs/apk/release/app-release-unsigned.apk',
+                                target: 'groups',
+                                destinationType: 'group',
+                                groupName: 'Testing Group'
+                            ]
+                        ]
                     )
-
-                    def uploadId = response.data.upload_id
-
-                    def uploadUrl = "${appCenterApiUrl}/${APP_NAME}/release_uploads/${uploadId}/upload"
-
-                    response = httpRequest(
-                        acceptType: 'APPLICATION_JSON',
-                        contentType: 'APPLICATION_JSON',
-                        httpMode: 'POST',
-                        url: uploadUrl,
-                        customHeaders: [[name: 'X-API-Token', value: env.APP_CENTER_API_TOKEN]],
-                        uploadFile: env.BUILD_DIR
-                    )
-
-                    def releaseUrl = "${appCenterApiUrl}/${APP_NAME}/releases"
-
-                    def releasePayload = [
-                        build_version: '1.0', // Set your app version
-                        build_number: '1', // Set your build number
-                        release_notes: 'Release notes for this version',
-                        release_notes_in_html: false,
-                        destination_name: 'Production', // Or any other distribution group you want to target
-                        destination_type: 'group'
-                    ]
-
-                    response = httpRequest(
-                        acceptType: 'APPLICATION_JSON',
-                        contentType: 'APPLICATION_JSON',
-                        httpMode: 'POST',
-                        url: releaseUrl,
-                        customHeaders: [[name: 'X-API-Token', value: env.APP_CENTER_API_TOKEN]],
-                        requestBody: groovy.json.JsonOutput.toJson(releasePayload)
-                    )
-
-                    echo "App published to App Center"
                 }
             }
         }
     }
 }
+// pipeline {
+//     agent any
+//
+//     environment {
+//         APP_CENTER_API_TOKEN = credentials('b9516eda8e2b5e46b98bf189a889a4e611e62c10') // Define a Jenkins credential for your App Center API token
+//         APP_NAME = 'TestFlavor'
+//         BUILD_DIR = 'app/build/outputs/apk/release/app-release-unsigned.apk' // Path to your APK file
+//         DISTRIBUTION_GROUP = 'TestersGroup' // Replace with your distribution group
+//     }
+//
+//     stages {
+//         stage('Checkout') {
+//             steps {
+//                 checkout scm
+//             }
+//         }
+//
+//         stage('Build APK') {
+//             steps {
+//                 sh './gradlew assembleRelease'
+//             }
+//         }
+//
+//         stage('Publish to App Center') {
+//             steps {
+//                 script {
+//                     def appCenterApiUrl = 'https://api.appcenter.ms/v0.1/apps'
+//                     def uploadApiUrl = "${appCenterApiUrl}/${APP_NAME}/release_uploads"
+//
+//                     def response = httpRequest(
+//                         acceptType: 'APPLICATION_JSON',
+//                         contentType: 'APPLICATION_JSON',
+//                         httpMode: 'POST',
+//                         url: uploadApiUrl,
+//                         customHeaders: [[name: 'X-API-Token', value: env.APP_CENTER_API_TOKEN]]
+//                     )
+//
+//                     def uploadId = response.data.upload_id
+//
+//                     def uploadUrl = "${appCenterApiUrl}/${APP_NAME}/release_uploads/${uploadId}/upload"
+//
+//                     response = httpRequest(
+//                         acceptType: 'APPLICATION_JSON',
+//                         contentType: 'APPLICATION_JSON',
+//                         httpMode: 'POST',
+//                         url: uploadUrl,
+//                         customHeaders: [[name: 'X-API-Token', value: env.APP_CENTER_API_TOKEN]],
+//                         uploadFile: env.BUILD_DIR
+//                     )
+//
+//                     def releaseUrl = "${appCenterApiUrl}/${APP_NAME}/releases"
+//
+//                     def releasePayload = [
+//                         build_version: '1.0', // Set your app version
+//                         build_number: '1', // Set your build number
+//                         release_notes: 'Release notes for this version',
+//                         release_notes_in_html: false,
+//                         destination_name: 'Production', // Or any other distribution group you want to target
+//                         destination_type: 'group'
+//                     ]
+//
+//                     response = httpRequest(
+//                         acceptType: 'APPLICATION_JSON',
+//                         contentType: 'APPLICATION_JSON',
+//                         httpMode: 'POST',
+//                         url: releaseUrl,
+//                         customHeaders: [[name: 'X-API-Token', value: env.APP_CENTER_API_TOKEN]],
+//                         requestBody: groovy.json.JsonOutput.toJson(releasePayload)
+//                     )
+//
+//                     echo "App published to App Center"
+//                 }
+//             }
+//         }
+//     }
+// }
