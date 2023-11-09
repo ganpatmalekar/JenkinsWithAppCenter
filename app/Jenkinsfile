@@ -22,7 +22,7 @@ pipeline {
                 script {
                     appcenter(
                         apiToken: 'b9516eda8e2b5e46b98bf189a889a4e611e62c10',
-                        ownerName: 'ganpatmalekar'
+                        ownerName: 'ganpatmalekar',
                         appName: 'TestFlavor',
                         artifacts: [
                             [
