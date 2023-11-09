@@ -16,27 +16,6 @@ pipeline {
                 archiveArtifacts '**/*.apk'
             }
         }
-
-        stage('Upload to App Center') {
-            steps {
-                script {
-                    appcenter apiToken: 'b9516eda8e2b5e46b98bf189a889a4e611e62c10',
-                        ownerName: 'ganpatmalekar',
-                        appName: 'TestFlavor',
-//                         artifacts: [
-//                             [
-//                                 upload: 'app/build/outputs/apk/release/app-release-unsigned.apk',
-//                                 target: 'groups',
-//                                 destinationType: 'group',
-//                                 groupName: 'Testing Group'
-//                             ]
-//                         ]
-                        pathToApp: 'app/build/outputs/apk/release/release-unsigned.apk',
-                        distributionGroups:'TestersGroup'
-                }
-            }
-        }
-    }
 }
 // pipeline {
 //     agent any
