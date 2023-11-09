@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    def gradleHome = tool name: 'Gradle', type: 'Tool'
+                    sh "${gradleHome}/bin/gradle assembleRelease"
+                }
+            }
+        }
+
+//         stage('Upload to App Center') {
+//             steps {
+//                 script {
+//                     appcenter(
+//                         credentialsId: 'Your-App-Center-Credentials',
+//                         appSlug: 'Your-App-Slug',
+//                         artifacts: [
+//                             [
+//                                 upload: 'app/build/outputs/apk/release/app-release.apk',
+//                                 target: 'groups',
+//                                 destinationType: 'group',
+//                                 groupName: 'Collaborators'
+//                             ]
+//                         ]
+//                     )
+//                 }
+//             }
+//         }
+    }
+}
