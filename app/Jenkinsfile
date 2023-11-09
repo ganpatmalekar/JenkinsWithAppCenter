@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     def gradleHome = tool name: 'Gradle', type: 'Tool'
-                    sh "${gradleHome}/bin/gradle assembleRelease"
+                    bat "${gradleHome}/bin/gradle assembleRelease"
                 }
             }
         }
