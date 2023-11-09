@@ -17,23 +17,23 @@ pipeline {
             }
         }
 
-//         stage('Upload to App Center') {
-//             steps {
-//                 script {
-//                     appcenter(
-//                         credentialsId: 'Your-App-Center-Credentials',
-//                         appSlug: 'Your-App-Slug',
-//                         artifacts: [
-//                             [
-//                                 upload: 'app/build/outputs/apk/release/app-release.apk',
-//                                 target: 'groups',
-//                                 destinationType: 'group',
-//                                 groupName: 'Collaborators'
-//                             ]
-//                         ]
-//                     )
-//                 }
-//             }
-//         }
+        stage('Upload to App Center') {
+            steps {
+                script {
+                    appcenter(
+                        credentialsId: 'b9516eda8e2b5e46b98bf189a889a4e611e62c10',
+                        appSlug: 'TestFlavor',
+                        artifacts: [
+                            [
+                                upload: 'app/build/outputs/apk/release/app-release.apk',
+                                target: 'groups',
+                                destinationType: 'group',
+                                groupName: 'Testing Group'
+                            ]
+                        ]
+                    )
+                }
+            }
+        }
     }
 }
