@@ -24,7 +24,7 @@ pipeline {
                        ownerName: 'ganpatmalekar',
                        distributionGroups: 'TestersGroup',
                        notifyTesters: false,
-                       pathToApp: 'app/build/outputs/apk/.../**/*.apk',
+                       pathToApp: 'app/build/outputs/apk/release/app-release-unsigned.apk',
                        pathToDebugSymbols: '',
                        releaseNotes: ''
             }
