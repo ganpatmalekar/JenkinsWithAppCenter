@@ -16,6 +16,19 @@ pipeline {
                 archiveArtifacts '**/*.apk'
             }
         }
+
+        stage('Publish to App Center') {
+            steps {
+                appCenter apiToken: 'b9516eda8e2b5e46b98bf189a889a4e611e62c10',
+                       appName: 'TestFlavor',
+                       ownerName: 'ganpatmalekar',
+                       distributionGroups: 'TestersGroup',
+                       notifyTesters: false,
+                       pathToApp: 'app/build/outputs/apk/.../**/*.apk',
+                       pathToDebugSymbols: '',
+                       releaseNotes: ''
+            }
+        }
     }
 }
 // pipeline {
