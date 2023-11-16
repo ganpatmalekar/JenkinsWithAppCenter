@@ -17,18 +17,27 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("D:\\JenkinsWithAppCenter.jks")
+            storePassword = "Test@1234"
+            keyAlias = "key0"
+            keyPassword = "Test@1234"
+        }
+    }
+
     buildFeatures {
         buildConfig = true
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "APP_CENTER_SECRET", "\"e7bc2bea-7de6-49d6-8ff6-f5c585667ddb\"")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
