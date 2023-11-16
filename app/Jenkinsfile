@@ -20,11 +20,11 @@ pipeline {
         stage('Publish to App Center') {
             steps {
                 appCenter apiToken: 'b9516eda8e2b5e46b98bf189a889a4e611e62c10',
-                       appName: 'TestFlavor',
+                       appName: 'JenkinsWithAppCenter',
                        ownerName: 'ganpatmalekar',
-                       distributionGroups: 'TestersGroup',
-                       notifyTesters: false,
-                       pathToApp: 'app/build/outputs/apk/release/app-release-unsigned.apk',
+                       distributionGroups: 'qa-test-grp',
+                       notifyTesters: true,
+                       pathToApp: 'app/build/outputs/apk/release/app-release.apk',
                        pathToDebugSymbols: '',
                        releaseNotes: ''
             }
