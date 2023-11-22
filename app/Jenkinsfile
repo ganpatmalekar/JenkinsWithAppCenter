@@ -27,6 +27,7 @@ pipeline {
                        pathToApp: 'app/build/outputs/apk/release/app-release.apk',
                        pathToDebugSymbols: '',
                        releaseNotes: ''
+
             }
         }
     }
